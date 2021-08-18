@@ -5,6 +5,10 @@ from pathlib import Path
 from telegram import Update, Bot
 from telegram.ext import Updater, MessageHandler, Filters, CallbackContext, CommandHandler
 from telegram.utils.request import Request
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 import requests
 import re
 CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
@@ -22,8 +26,9 @@ def get_list(update: Update, context: CallbackContext):
 	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,options=chrome_options)
 	driver.set_window_size(1920,1080)
 	driver.get("https://coinsniper.net/");
+	WebDriverWait(browser, delay).until(EC.presence_of_element_located((By.CLASS_NAME, 'promoted')))
 	script = 'promote = document.querySelector(".listings.promoted");promote.remove(); var last = $("table").find("tbody tr:eq(1)").attr("data-listingid");return last;'
-	
+
 	meta = int(driver.execute_script(script))
 	for i in range(2,meta):
 		driver.get("https://coinsniper.net/coin/{}".format(i));
@@ -56,6 +61,7 @@ def get_list(update: Update, context: CallbackContext):
     			
 		else:
 			os.mknod("readme.txt")
+	driver.quit()
 	chat_id = update.message.chat_id
 	# r =  requests.post('https://api.anonymousfiles.io', files={'file': open('./readme.txt', 'rb')})
 	# chat_id = update.message.reply_document(document="readme.txt")
