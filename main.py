@@ -10,6 +10,8 @@ import re
 CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 # CHROMEDRIVER_PATH = './chromedriver'
 def get_list(update: Update, context: CallbackContext):
+	update.message.reply_text('Getting File may take more than 10 minutes')
+	
 	chrome_options = webdriver.ChromeOptions()
 	chrome_options.add_argument("--start-maximized")
 	chrome_options.add_argument("--headless")
@@ -54,7 +56,6 @@ def get_list(update: Update, context: CallbackContext):
     			
 		else:
 			os.mknod("readme.txt")
-	update.message.reply_text('Getting File may take more than 10 minutes')
 	chat_id = update.message.chat_id
 	# r =  requests.post('https://api.anonymousfiles.io', files={'file': open('./readme.txt', 'rb')})
 	# chat_id = update.message.reply_document(document="readme.txt")
