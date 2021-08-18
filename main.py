@@ -26,8 +26,9 @@ def get_list(update: Update, context: CallbackContext):
 	driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,options=chrome_options)
 	driver.set_window_size(1920,1080)
 	driver.get("https://coinsniper.net/");
-	delay=20
-	WebDriverWait(driver, delay).until(EC.presence_of_element_located((By.CLASS_NAME, 'promoted')))
+	delay=10
+	time.sleep(delay)
+	
 	script = 'promote = document.querySelector(".listings.promoted");promote.remove(); var last = $("table").find("tbody tr:eq(1)").attr("data-listingid");return last;'
 
 	meta = int(driver.execute_script(script))
